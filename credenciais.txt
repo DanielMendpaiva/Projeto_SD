@@ -1,0 +1,9 @@
+========================================
+  RotaAlt - Credenciais Django Admin
+========================================
+
+URL: http://localhost:8000/admin/
+Usuário: admin
+Senha: admin123
+
+Criado pelo script populate.py
