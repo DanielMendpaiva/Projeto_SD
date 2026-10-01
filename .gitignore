@@ -1,0 +1,23 @@
+# Ambientes virtuais
+venv/
+env/
+.env
+ENV/
+
+# Byte-code do Python e caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Banco de dados local (para evitar conflitos de merge binário entre os membros)
+db.sqlite3
+db.sqlite3-journal
+
+# Arquivos temporários e de configuração do Vagrant
+.vagrant/
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
