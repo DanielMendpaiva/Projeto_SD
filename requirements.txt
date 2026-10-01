@@ -1,2 +1,5 @@
+# Framework principal para desenvolvimento web
 Django>=4.2,<5.0
+
+# Biblioteca para gerar dados ficticios realistas no banco de dados (usada no populate.py)
 Faker>=19.0
