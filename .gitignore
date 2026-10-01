@@ -1,23 +1,42 @@
-# Ambientes virtuais
+# ==========================================
+# ARQUIVOS E PASTAS QUE O GIT DEVE IGNORAR
+# ==========================================
+
+# 1. Ambientes Virtuais (Venv)
+# Nao devem subir para o Git porque contem arquivos binarios especificos de cada computador
 venv/
 env/
 .env
 ENV/
 
-# Byte-code do Python e caches
+# 2. Arquivos temporarios do Python (Bytecode)
+# Sao criados automaticamente pelo Python ao executar o codigo
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 
-# Banco de dados local (para evitar conflitos de merge binário entre os membros)
+# 3. Banco de Dados Local (SQLite)
+# Ignoramos o arquivo do banco para evitar conflitos de merge entre os membros da equipe.
+# Cada um pode gerar seu proprio banco usando: python manage.py migrate
 db.sqlite3
 db.sqlite3-journal
+*.sqlite3-shm
+*.sqlite3-wal
 
-# Arquivos temporários e de configuração do Vagrant
+# 4. Arquivos da Maquina Virtual (Vagrant)
+# Pasta gerada pelo Vagrant para controlar a VM localmente no seu computador
 .vagrant/
 
-# IDEs e Editores
+# 5. Arquivos de configuracao de editores (VS Code, PyCharm, etc.)
 .vscode/
 .idea/
 *.swp
+
+# 6. Arquivos do sistema operacional (Windows e Mac)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 7. Arquivos de logs
+*.log
