@@ -32,6 +32,8 @@ db.sqlite3-journal
 .vscode/
 .idea/
 *.swp
+pyrefly.toml
+pyrightconfig.json
 
 # 6. Arquivos do sistema operacional (Windows e Mac)
 .DS_Store
