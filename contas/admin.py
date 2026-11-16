@@ -1,9 +1,12 @@
+# pyrefly: ignore [missing-import]
 from django.contrib import admin
+# pyrefly: ignore [missing-import]
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+# pyrefly: ignore [missing-import]
 from django.contrib.auth.models import User
 from .models import Perfil
 
-
+"Inline embute o formulário do Perfil diretamente dentro da página de edição do Usuário no painel administrativo."
 class PerfilInline(admin.StackedInline):
     """Inline do perfil dentro do User admin."""
     model = Perfil
@@ -11,6 +14,7 @@ class PerfilInline(admin.StackedInline):
     verbose_name = 'Perfil'
     verbose_name_plural = 'Perfil'
     fk_name = 'usuario'
+    "qual campo do Perfil faz ligação com User"
 
 
 class UserAdmin(BaseUserAdmin):
@@ -31,7 +35,7 @@ class UserAdmin(BaseUserAdmin):
             return '-'
 
 
-# Re-register User with custom admin
+# Re-register User com custom admin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 

@@ -100,7 +100,7 @@ Quando terminar de estudar ou trabalhar no projeto:
 
 ---
 
-## 🗄️ Sobre as Tabelas do Banco de Dados
+## Sobre as Tabelas do Banco de Dados
 
 Ao executar as migrações com `python manage.py migrate`, o Django gera ao todo **20 tabelas** no banco de dados SQLite (`db.sqlite3`), distribuídas entre tabelas de negócio do projeto e tabelas de infraestrutura nativa do framework:
 
@@ -108,10 +108,10 @@ Ao executar as migrações com `python manage.py migrate`, o Django gera ao todo
 
 Criadas a partir dos modelos (`models.py`) implementados para as regras do sistema:
 
-#### 👤 App `contas` (1 tabela)
+#### App `contas` (1 tabela)
 * **`contas_perfil`** (`Perfil`): Estende o usuário padrão do Django adicionando tipo de acesso (`passageiro`, `motorista` ou `gestor`), CPF, telefone e data de nascimento.
 
-#### 🚐 App `transporte` (7 tabelas)
+#### App `transporte` (7 tabelas)
 * **`transporte_operador`** (`Operador`): Cooperativas e empresas operadoras de transporte alternativo (nome, CNPJ, e-mail, telefone e endereço).
 * **`transporte_veiculo`** (`Veiculo`): Frota de veículos cadastrados (placa, modelo, tipo de veículo como van ou micro-ônibus, capacidade de passageiros e ano).
 * **`transporte_motorista`** (`Motorista`): Motoristas vinculados a um operador e ao seu perfil de usuário, contendo número e categoria da CNH.
@@ -120,7 +120,7 @@ Criadas a partir dos modelos (`models.py`) implementados para as regras do siste
 * **`transporte_paradarota`** (`ParadaRota`): Tabela intermediária (*through*) que define a ordem sequencial das paradas em cada rota e o tempo estimado de deslocamento entre elas.
 * **`transporte_viagem`** (`Viagem`): Viagens agendadas, em andamento ou concluídas, vinculando rota, veículo, motorista, horários de saída/chegada, vagas disponíveis, tarifa e status.
 
-#### 🎫 App `reservas` (2 tabelas)
+#### App `reservas` (2 tabelas)
 * **`reservas_reserva`** (`Reserva`): Controle das reservas de passagens e vagas feitas por passageiros para viagens específicas.
 * **`reservas_avaliacao`** (`Avaliacao`): Avaliações e notas (1 a 5) com comentários deixados pelos passageiros após a viagem.
 

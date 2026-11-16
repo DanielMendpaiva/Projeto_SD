@@ -1,5 +1,5 @@
 """
-WSGI config for rotaalt project.
+Configuração WSGI para o projeto rotaalt.
 """
 import os
 from django.core.wsgi import get_wsgi_application

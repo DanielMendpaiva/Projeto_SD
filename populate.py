@@ -88,7 +88,7 @@ def criar_usuarios(quantidade=200):
             )
             usuarios.append(user)
         except Exception as e:
-            pass  # Skip duplicates
+            pass  
     print(f'  {len(usuarios)} usuários criados.')
     return usuarios
 
@@ -143,7 +143,7 @@ def criar_veiculos(operadores, quantidade=80):
             modelo = random.choice(modelos_van + modelos_micro)
             capacidade = random.choice([12, 15, 20])
 
-        # Generate unique plate
+        # Gera placas
         while True:
             placa = fake.license_plate()
             if placa not in placas_usadas:

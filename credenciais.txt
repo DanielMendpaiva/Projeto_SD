@@ -1,9 +1,30 @@
-========================================
-  RotaAlt - Credenciais Django Admin
-========================================
+     		     PROJETO ROTAALT 
+          CREDENCIAIS DE ACESSO AO DJANGO ADMIN
 
-URL: http://localhost:8000/admin/
-Usuário: admin
-Senha: admin123
+Equipe:
+Daniel Mendonça Paiva
+Theogenes Gabriel Oliveira de Andrade 
+Renan Oliveira Santos
+João Vitor de Carvalho da Rocha
 
-Criado pelo script populate.py
+
+1. ACESSO AO PAINEL ADMINISTRATIVO (SUPERUSUÁRIO)
+------------------------------------------------------------
+URL Local:      http://localhost:8000/admin/
+URL Hospedado:  (Ambiente local com suporte a VM Vagrant)
+Usuário:        admin
+Senha:          admin123
+E-mail:         admin@rotaalt.com
+
+
+2. CREDENCIAIS DOS DADOS POPULADOS (USUÁRIOS COMUNS)
+------------------------------------------------------------
+O banco de dados já esta populado com mais de 1.600
+registros gerados pelo Faker (populate.py).
+
+Para todos os usuários fictícios criados (passageiros,
+motoristas e gestores), a senha padrão de acesso é:
+
+Senha Padrão:   senha123
+
+
