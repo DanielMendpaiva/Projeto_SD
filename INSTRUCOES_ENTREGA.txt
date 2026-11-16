@@ -1,0 +1,22 @@
+ROTAALT — INSTRUÇÕES PARA TESTE
+
+Link do sistema hospedado em cloud:
+https://rennanos.github.io/Trabalho_SD/
+
+Funcionalidade demonstrada: cadastro de passageiro.
+Não é necessário fazer login para acessar o formulário.
+
+Teste de validação bem-sucedida:
+1. Abra o link do sistema e acesse a página inicial.
+2. Preencha todos os campos com dados válidos e ainda não cadastrados.
+3. Use um nome de usuário disponível, um e-mail válido e uma senha que atenda às regras exibidas abaixo do campo.
+4. Confirme a senha e clique em "Criar cadastro".
+5. A mensagem "Cadastro realizado com sucesso!" deve aparecer.
+
+Teste de validação malsucedida:
+1. Acesse novamente a página de cadastro.
+2. Envie o formulário com os campos obrigatórios vazios.
+3. O cadastro não será salvo; os campos com erro serão destacados e uma mensagem de erro aparecerá.
+
+Login de teste:
+Não se aplica. A funcionalidade de cadastro é pública e não exige login.

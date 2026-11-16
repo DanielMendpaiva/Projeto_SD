@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro de passageiro | RotaAlt</title>
+  <style>
+    body { margin: 0; padding: 32px 16px; background: #f2f5f7; color: #202b35; font: 16px Arial, sans-serif; }
+    main { max-width: 560px; margin: auto; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 16px #18304418; }
+    h1 { margin-top: 0; color: #176b63; }
+    .field { margin: 18px 0; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; }
+    input { box-sizing: border-box; width: 100%; padding: 10px; border: 1px solid #aab7c0; border-radius: 5px; font-size: 16px; }
+    .helptext { display: block; margin-top: 5px; color: #596873; font-size: 13px; }
+    .errors, .message { padding: 10px 12px; border-radius: 5px; }
+    .errors, .error { color: #8b1d1d; background: #fdecec; }
+    .success { color: #145b31; background: #e7f6ec; }
+    button { padding: 11px 18px; border: 0; border-radius: 5px; background: #176b63; color: white; font-size: 16px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Cadastro de passageiro</h1>
+    <p>Preencha os dados para criar sua conta no RotaAlt.</p>
+
+    {% for message in messages %}
+      <div class="message {{ message.tags }}" role="status">{{ message }}</div>
+    {% endfor %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<small class="helptext">{{ field.help_text }}</small>{% endif %}
+          {% for error in field.errors %}<div class="errors" role="alert">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      {% if form.non_field_errors %}
+        <div class="errors" role="alert">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <button type="submit">Criar cadastro</button>
+    </form>
+  </main>
+</body>
+</html>
