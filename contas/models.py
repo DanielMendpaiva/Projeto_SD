@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
+#Tabela 
 class Perfil(models.Model):
     """Perfil estendido do usuário com tipo de acesso."""
     TIPO_CHOICES = [
@@ -9,14 +9,17 @@ class Perfil(models.Model):
         ('motorista', 'Motorista'),
         ('gestor', 'Gestor'),
     ]
+    #OneToOneField define relação 1:1 entre User e Perfil
     usuario = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='perfil',
         verbose_name='Usuário'
     )
+    #CharFiel define o tamanho máximo do texto
     tipo = models.CharField(
         max_length=20, choices=TIPO_CHOICES, default='passageiro',
         verbose_name='Tipo de perfil'
     )
+    #Blank True = campo não obrigatorio 
     telefone = models.CharField(max_length=20, blank=True, verbose_name='Telefone')
     cpf = models.CharField(
         max_length=14, unique=True, blank=True, null=True,

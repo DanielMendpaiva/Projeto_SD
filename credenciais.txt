@@ -1,30 +1,90 @@
-     		     PROJETO ROTAALT 
-          CREDENCIAIS DE ACESSO AO DJANGO ADMIN
+============================================================
+                     PROJETO ROTAALT 
+           CATÁLOGO DE CREDENCIAIS DE ACESSO
+============================================================
 
 Equipe:
-Daniel Mendonça Paiva
-Theogenes Gabriel Oliveira de Andrade 
-Renan Oliveira Santos
-João Vitor de Carvalho da Rocha
+- Daniel Mendonça Paiva
+- Theogenes Gabriel Oliveira de Andrade 
+- Renan Oliveira Santos
+- João Vitor de Carvalho da Rocha
 
 
-1. ACESSO AO PAINEL ADMINISTRATIVO (SUPERUSUÁRIO)
+1. ACESSO AO PAINEL ADMINISTRATIVO (SUPERUSUÁRIO / GESTOR)
 ------------------------------------------------------------
-URL Local:      http://localhost:8000/admin/
-URL Hospedado:  (Ambiente local com suporte a VM Vagrant)
-Usuário:        admin
-Senha:          admin123
-E-mail:         admin@rotaalt.com
+URL do Painel Admin: http://localhost:8000/admin/
+URL da Aplicação Web: http://localhost:8000/login/
+
+Usuário: admin
+Senha:   admin123
+E-mail:  admin@rotaalt.com
+Perfil:  Administrador Geral (Acesso irrestrito a todos os modelos)
 
 
-2. CREDENCIAIS DOS DADOS POPULADOS (USUÁRIOS COMUNS)
+2. CONTAS DE TESTE DE CLIENTES / PASSAGEIROS
 ------------------------------------------------------------
-O banco de dados já esta populado com mais de 1.600
-registros gerados pelo Faker (populate.py).
+URL de Login Web: http://localhost:8000/login/
 
-Para todos os usuários fictícios criados (passageiros,
-motoristas e gestores), a senha padrão de acesso é:
+Conta 1:
+- Usuário: cliente.maria
+- Nome:    Maria Santos
+- Senha:   senha123
+- CPF:     444.555.666-04
+- Telefone: (87) 99100-1122
 
-Senha Padrão:   senha123
+Conta 2:
+- Usuário: cliente.joao
+- Nome:    João Oliveira
+- Senha:   senha123
+- CPF:     555.666.777-05
+- Telefone: (74) 99200-2233
+
+Conta 3:
+- Usuário: cliente.ana
+- Nome:    Ana Ferreira
+- Senha:   senha123
+- CPF:     666.777.888-06
+- Telefone: (87) 99300-3344
 
 
+3. CONTAS DE TESTE DE MOTORISTAS
+------------------------------------------------------------
+URL de Login Web: http://localhost:8000/login/
+
+Conta 1:
+- Usuário: motorista.carlos
+- Nome:    Carlos Silva
+- Senha:   senha123
+- CNH:     12345678901 (Categoria D)
+- Vínculo: COOTRANSVALE
+
+Conta 2:
+- Usuário: motorista.antonio
+- Nome:    Antônio Souza
+- Senha:   senha123
+- CNH:     23456789012 (Categoria D)
+- Vínculo: ASTRASOB
+
+Conta 3:
+- Usuário: motorista.jose
+- Nome:    José Pereira
+- Senha:   senha123
+- CNH:     34567890123 (Categoria E)
+- Vínculo: ASTAFRAN
+
+
+4. CONTA DE GESTOR DE COOPERATIVA
+------------------------------------------------------------
+- Usuário: gestor.coop
+- Nome:    Marcos Gestor
+- Senha:   senha123
+- Cooperativa: COOTRANSVALE
+
+
+5. USUÁRIOS GERADOS DINAMICAMENTE PELO FAKER
+------------------------------------------------------------
+Para todos os mais de 150 usuários gerados automaticamente 
+no arquivo populate.py, a senha padrão é:
+
+Senha Padrão: senha123
+============================================================

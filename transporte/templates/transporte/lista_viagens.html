@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block titulo %}Viagens Disponíveis | RotaAlt{% endblock %}
+
+{% block conteudo %}
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 fw-bold text-rotaalt mb-0">Viagens Disponíveis</h2>
+    <a href="{% url 'transporte:lista_viagens' %}" class="btn btn-outline-secondary btn-sm">
+      Limpar filtros
+    </a>
+  </div>
+
+  <!-- Formulario de busca no topo para refinar resultados -->
+  <div class="card p-3 mb-4 shadow-sm border-0">
+    <form method="get" action="{% url 'transporte:lista_viagens' %}" class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label small fw-bold">Origem</label>
+        <input type="text" name="origem" class="form-control form-control-sm" value="{{ origem }}" placeholder="Ex: Petrolina">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-bold">Destino</label>
+        <input type="text" name="destino" class="form-control form-control-sm" value="{{ destino }}" placeholder="Ex: Juazeiro">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small fw-bold">Data</label>
+        <input type="date" name="data" class="form-control form-control-sm" value="{{ data }}">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-rotaalt btn-sm w-100">
+          <i class="bi bi-funnel me-1"></i> Filtrar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Exibicao dos resultados -->
+  {% if viagens %}
+    <p class="text-muted small mb-3">Encontramos <strong>{{ viagens.count }}</strong> viagem(ns) agendada(s):</p>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle bg-white shadow-sm rounded">
+        <thead class="table-light">
+          <tr>
+            <th>Rota</th>
+            <th>Operador</th>
+            <th>Saída</th>
+            <th>Veículo</th>
+            <th>Vagas</th>
+            <th>Tarifa</th>
+            <th class="text-end">Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for viagem in viagens %}
+            <tr>
+              <td>
+                <span class="fw-bold text-dark">{{ viagem.rota.nome }}</span>
+              </td>
+              <td>
+                <small class="text-secondary fw-semibold">{{ viagem.rota.operador.sigla }}</small>
+              </td>
+              <td>
+                <!-- Formata a data para dia/mes/ano e horario -->
+                <span class="small">{{ viagem.data_hora_saida|date:"d/m/Y H:i" }}</span>
+              </td>
+              <td>
+                <small class="text-muted">{{ viagem.veiculo.modelo }} ({{ viagem.veiculo.get_tipo_display }})</small>
+              </td>
+              <td>
+                {% if viagem.vagas_disponiveis > 3 %}
+                  <span class="badge bg-success">{{ viagem.vagas_disponiveis }} vagas</span>
+                {% elif viagem.vagas_disponiveis > 0 %}
+                  <span class="badge bg-warning text-dark">{{ viagem.vagas_disponiveis }} vagas</span>
+                {% else %}
+                  <span class="badge bg-danger">Esgotado</span>
+                {% endif %}
+              </td>
+              <td class="fw-bold text-dark">
+                R$ {{ viagem.preco }}
+              </td>
+              <td class="text-end">
+                <a href="{% url 'transporte:detalhe_viagem' viagem.id %}" class="btn btn-sm btn-outline-rotaalt">
+                  Detalhes
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center py-4">
+      <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+      <strong>Nenhuma viagem encontrada</strong> para os filtros informados.
+      <div class="mt-2">
+        <a href="{% url 'transporte:lista_viagens' %}" class="btn btn-outline-dark btn-sm">Ver todas as viagens disponíveis</a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,47 +1,75 @@
-<!doctype html>
-<html lang="pt-br">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cadastro de passageiro | RotaAlt</title>
-  <style>
-    body { margin: 0; padding: 32px 16px; background: #f2f5f7; color: #202b35; font: 16px Arial, sans-serif; }
-    main { max-width: 560px; margin: auto; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 3px 16px #18304418; }
-    h1 { margin-top: 0; color: #176b63; }
-    .field { margin: 18px 0; }
-    label { display: block; margin-bottom: 6px; font-weight: bold; }
-    input { box-sizing: border-box; width: 100%; padding: 10px; border: 1px solid #aab7c0; border-radius: 5px; font-size: 16px; }
-    .helptext { display: block; margin-top: 5px; color: #596873; font-size: 13px; }
-    .errors, .message { padding: 10px 12px; border-radius: 5px; }
-    .errors, .error { color: #8b1d1d; background: #fdecec; }
-    .success { color: #145b31; background: #e7f6ec; }
-    button { padding: 11px 18px; border: 0; border-radius: 5px; background: #176b63; color: white; font-size: 16px; cursor: pointer; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Cadastro de passageiro</h1>
-    <p>Preencha os dados para criar sua conta no RotaAlt.</p>
+{% extends "base.html" %}
 
-    {% for message in messages %}
-      <div class="message {{ message.tags }}" role="status">{{ message }}</div>
-    {% endfor %}
+{% block titulo %}Cadastro de Passageiro | RotaAlt{% endblock %}
 
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {% for field in form %}
-        <div class="field">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}<small class="helptext">{{ field.help_text }}</small>{% endif %}
-          {% for error in field.errors %}<div class="errors" role="alert">{{ error }}</div>{% endfor %}
+{% block conteudo %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4 p-md-5">
+          <div class="text-center mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center bg-light text-rotaalt rounded-circle p-3 mb-2">
+              <i class="bi bi-person-plus-fill fs-2"></i>
+            </div>
+            <h2 class="fw-bold text-rotaalt mb-1">Cadastro de Passageiro</h2>
+            <p class="text-muted small">Crie sua conta para consultar itinerários e reservar passagens.</p>
+          </div>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger py-2 small">
+                {% for error in form.non_field_errors %}
+                  <div>{{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% for field in form %}
+              <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-secondary small">
+                  {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                  <div class="form-text small text-muted">{{ field.help_text }}</div>
+                {% endif %}
+                {% for error in field.errors %}
+                  <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>{{ error }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-rotaalt py-2 fw-semibold">
+                <i class="bi bi-check-circle me-1"></i> Criar Cadastro
+              </button>
+            </div>
+          </form>
+
+          <div class="text-center mt-4 pt-3 border-top">
+            <span class="small text-muted">Já possui uma conta?</span>
+            <a href="/admin/" class="small text-rotaalt fw-semibold text-decoration-none ms-1">Acessar Admin</a>
+          </div>
         </div>
-      {% endfor %}
-      {% if form.non_field_errors %}
-        <div class="errors" role="alert">{{ form.non_field_errors }}</div>
-      {% endif %}
-      <button type="submit">Criar cadastro</button>
-    </form>
-  </main>
-</body>
-</html>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Adiciona a classe 'form-control' do Bootstrap em todos os inputs automaticamente
+  document.querySelectorAll('form input').forEach(function(input) {
+    if (input.type !== 'checkbox' && input.type !== 'radio') {
+      input.classList.add('form-control');
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ viagem.rota.nome }} | RotaAlt{% endblock %}
+
+{% block conteudo %}
+<div class="container">
+  <!-- Navegacao simples de retorno -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'transporte:home' %}" class="text-decoration-none">Início</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'transporte:lista_viagens' %}" class="text-decoration-none">Viagens</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detalhes da Viagem</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <!-- Coluna esquerda: dados principais da viagem -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <span class="badge bg-secondary mb-1">{{ viagem.rota.operador.sigla }}</span>
+          <h2 class="h4 fw-bold text-rotaalt mb-0">{{ viagem.rota.nome }}</h2>
+        </div>
+        <div class="card-body">
+          <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+              <small class="text-muted d-block">Data e Horário de Saída</small>
+              <strong class="fs-6 text-dark">
+                <i class="bi bi-clock me-1 text-rotaalt"></i>
+                {{ viagem.data_hora_saida|date:"d/m/Y" }} às {{ viagem.data_hora_saida|date:"H:i" }}
+              </strong>
+            </div>
+            <div class="col-sm-6">
+              <small class="text-muted d-block">Status</small>
+              <span class="badge {% if viagem.status == 'agendada' %}bg-primary{% elif viagem.status == 'concluida' %}bg-success{% else %}bg-secondary{% endif %}">
+                {{ viagem.get_status_display }}
+              </span>
+            </div>
+          </div>
+
+          {% if viagem.observacoes %}
+            <div class="alert alert-light border small">
+              <strong>Observações:</strong> {{ viagem.observacoes }}
+            </div>
+          {% endif %}
+
+          <hr>
+
+          <!-- Informacoes do veiculo e motorista -->
+          <h5 class="h6 fw-bold text-secondary mb-3">Informações do Transporte</h5>
+          <div class="row g-2 small">
+            <div class="col-md-6">
+              <p class="mb-1"><strong>Veículo:</strong> {{ viagem.veiculo.modelo }} ({{ viagem.veiculo.get_tipo_display }})</p>
+              <p class="mb-1"><strong>Placa:</strong> {{ viagem.veiculo.placa }}</p>
+            </div>
+            <div class="col-md-6">
+              <p class="mb-1"><strong>Motorista:</strong> {{ viagem.motorista.perfil.usuario.get_full_name|default:viagem.motorista.perfil.usuario.username }}</p>
+              <p class="mb-1"><strong>Categoria CNH:</strong> {{ viagem.motorista.categoria_cnh }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card com o roteiro das paradas em ordem -->
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+          <h5 class="h6 fw-bold text-dark mb-0">Itinerário e Paradas da Rota</h5>
+        </div>
+        <div class="card-body p-0">
+          {% if paradas %}
+            <ul class="list-group list-group-flush">
+              {% for parada_rota in paradas %}
+                <li class="list-group-item d-flex align-items-start gap-3 py-3">
+                  <!-- Numero da ordem da parada -->
+                  <span class="badge rounded-pill bg-light text-rotaalt border border-success fw-bold fs-6">
+                    {{ parada_rota.ordem }}º
+                  </span>
+                  <div>
+                    <strong class="text-dark d-block">{{ parada_rota.parada.nome }}</strong>
+                    {% if parada_rota.parada.endereco %}
+                      <small class="text-muted d-block">{{ parada_rota.parada.endereco }}</small>
+                    {% endif %}
+                    {% if parada_rota.tempo_estimado %}
+                      <small class="text-secondary">
+                        <i class="bi bi-stopwatch me-1"></i>Tempo estimado: {{ parada_rota.tempo_estimado }}
+                      </small>
+                    {% endif %}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="p-3 text-muted small">Nenhuma parada detalhada cadastrada para esta rota.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna direita: card com valor e botao de reserva -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+        <div class="card-body p-4 text-center">
+          <small class="text-muted d-block mb-1">Preço por passageiro</small>
+          <div class="display-6 fw-bold text-rotaalt mb-2">R$ {{ viagem.preco }}</div>
+
+          <div class="mb-3">
+            {% if viagem.vagas_disponiveis > 0 %}
+              <span class="badge bg-success-subtle text-success border border-success px-3 py-2 fs-6">
+                {{ viagem.vagas_disponiveis }} vagas disponíveis
+              </span>
+            {% else %}
+              <span class="badge bg-danger-subtle text-danger border border-danger px-3 py-2 fs-6">
+                Esgotado
+              </span>
+            {% endif %}
+          </div>
+
+          <div class="d-grid gap-2">
+            {% if viagem.vagas_disponiveis > 0 %}
+              <!-- Quando fizermos a tela de reserva, apontaremos este botao para ela -->
+              <a href="#" class="btn btn-rotaalt py-2 fw-semibold">
+                <i class="bi bi-ticket-perforated me-1"></i> Reservar Assento
+              </a>
+            {% else %}
+              <button class="btn btn-secondary py-2" disabled>Sem vagas no momento</button>
+            {% endif %}
+
+            <a href="{% url 'transporte:lista_viagens' %}" class="btn btn-outline-secondary py-2 btn-sm">
+              Voltar para a lista
+            </a>
+          </div>
+
+          <div class="mt-3 text-start small text-muted border-top pt-3">
+            <p class="mb-1"><i class="bi bi-shield-check text-success me-1"></i> Pagamento na viagem</p>
+            <p class="mb-0"><i class="bi bi-info-circle text-primary me-1"></i> Cancelamento grátis até a saída</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -19,6 +19,17 @@ class Operador(models.Model):
     def __str__(self):
         return self.nome
 
+    @property
+    def sigla(self):
+        """Retorna apenas a sigla ou nome curto da cooperativa para os cards."""
+        if ' - ' in self.nome:
+            return self.nome.split(' - ')[0].strip()
+        if 'Curaçá' in self.nome:
+            return 'ASTRA-Curaçá'
+        if 'Bonfim' in self.nome or 'Uauá' in self.nome:
+            return 'ASTRA-Bonfim/Uauá'
+        return self.nome
+
 
 class Veiculo(models.Model):
     """Veículo utilizado no transporte alternativo."""
@@ -136,6 +147,7 @@ class ParadaRota(models.Model):
         Parada, on_delete=models.CASCADE, verbose_name='Parada'
     )
     ordem = models.PositiveIntegerField(verbose_name='Ordem')
+    #ordem das paradas
     tempo_estimado = models.DurationField(
         null=True, blank=True,
         verbose_name='Tempo estimado desde a parada anterior',
@@ -147,6 +159,8 @@ class ParadaRota(models.Model):
         verbose_name_plural = 'Paradas da Rota'
         ordering = ['rota', 'ordem']
         unique_together = [('rota', 'ordem'), ('rota', 'parada')]
+        #Garante que na mesma rota não pode ter 2 paradas na mesma posição
+        #e a mesma parada não aparece 2 vezes na mesma rota
 
     def __str__(self):
         return f'{self.rota.nome} - {self.ordem}ª: {self.parada.nome}'

@@ -4,7 +4,7 @@ Sistema web desenvolvido em Django para gestão de transporte alternativo, linha
 
 ---
 
-## 🛠️ Pré-requisitos na Máquina Física (Host)
+## Pré-requisitos na Máquina Física (Host)
 
 Antes de começar, certifique-se de ter instalado no seu computador:
 1. **[VirtualBox](https://www.virtualbox.org/)** (gerenciador de máquinas virtuais)
@@ -13,7 +13,7 @@ Antes de começar, certifique-se de ter instalado no seu computador:
 
 ---
 
-## 🚀 Como Iniciar o Projeto com Vagrant e Venv
+## Como Iniciar o Projeto com Vagrant e Venv
 
 Siga o passo a passo abaixo no terminal do seu computador (PowerShell ou Prompt de Comando):
 
@@ -37,7 +37,7 @@ vagrant ssh
 
 ---
 
-## 💻 Dentro da Máquina Virtual (Terminal Linux)
+## Dentro da Máquina Virtual (Terminal Linux)
 
 Após entrar na VM via `vagrant ssh`, execute os seguintes comandos:
 
@@ -79,7 +79,7 @@ python manage.py runserver 0.0.0.0:8000
 
 ---
 
-## 🌐 Acessando a Aplicação no Navegador
+## Acessando a Aplicação no Navegador
 
 Abra o navegador do seu computador e acesse:
 * **Painel Administrativo:** [http://localhost:8000/admin/](http://localhost:8000/admin/)
@@ -88,7 +88,7 @@ Abra o navegador do seu computador e acesse:
 
 ---
 
-## 📌 Comandos Úteis do Dia a Dia (no seu computador)
+## Comandos Úteis do Dia a Dia (no seu computador)
 
 Quando terminar de estudar ou trabalhar no projeto:
 

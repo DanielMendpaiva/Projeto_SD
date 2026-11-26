@@ -1,0 +1,43 @@
+/* Estilos basicos personalizados do RotaAlt */
+
+:root {
+  --cor-principal: #176b63;
+  --cor-destaque: #12524c;
+  --fundo-cinza: #f8fafc;
+}
+
+body {
+  background-color: var(--fundo-cinza);
+  font-family: Arial, sans-serif;
+}
+
+/* Botao padrao verde do projeto */
+.btn-rotaalt {
+  background-color: var(--cor-principal);
+  color: #ffffff;
+  border: none;
+}
+
+.btn-rotaalt:hover {
+  background-color: var(--cor-destaque);
+  color: #ffffff;
+}
+
+.btn-outline-rotaalt {
+  border: 1px solid var(--cor-principal);
+  color: var(--cor-principal);
+}
+
+.btn-outline-rotaalt:hover {
+  background-color: var(--cor-principal);
+  color: #ffffff;
+}
+
+.text-rotaalt {
+  color: var(--cor-principal) !important;
+}
+
+/* Ajuste simples para o rodape ficar sempre embaixo */
+footer {
+  margin-top: auto;
+}

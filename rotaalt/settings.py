@@ -43,7 +43,7 @@ ROOT_URLCONF = 'rotaalt.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,6 +82,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+# Pasta onde colocamos nossos arquivos css e imagens do projeto
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configurações de Login e Autenticação
+LOGIN_URL = 'contas:login'
+LOGIN_REDIRECT_URL = 'transporte:home'
+LOGOUT_REDIRECT_URL = 'transporte:home'
+

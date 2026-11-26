@@ -54,10 +54,104 @@ def criar_superusuario():
         print('Superusuário já existe.')
 
 
+# Usuários pré-configurados com credenciais fáceis para testes e apresentações
+USUARIOS_TESTE_FIXOS = [
+    # Motoristas de teste
+    {
+        'username': 'motorista.carlos',
+        'first_name': 'Carlos',
+        'last_name': 'Silva',
+        'email': 'carlos.motorista@rotaalt.com',
+        'tipo': 'motorista',
+        'telefone': '(87) 98811-2233',
+        'cpf': '111.222.333-01',
+    },
+    {
+        'username': 'motorista.antonio',
+        'first_name': 'Antônio',
+        'last_name': 'Souza',
+        'email': 'antonio.motorista@rotaalt.com',
+        'tipo': 'motorista',
+        'telefone': '(74) 98822-3344',
+        'cpf': '222.333.444-02',
+    },
+    {
+        'username': 'motorista.jose',
+        'first_name': 'José',
+        'last_name': 'Pereira',
+        'email': 'jose.motorista@rotaalt.com',
+        'tipo': 'motorista',
+        'telefone': '(87) 98833-4455',
+        'cpf': '333.444.555-03',
+    },
+    # Clientes / Passageiros de teste
+    {
+        'username': 'cliente.maria',
+        'first_name': 'Maria',
+        'last_name': 'Santos',
+        'email': 'maria.passageira@gmail.com',
+        'tipo': 'passageiro',
+        'telefone': '(87) 99100-1122',
+        'cpf': '444.555.666-04',
+    },
+    {
+        'username': 'cliente.joao',
+        'first_name': 'João',
+        'last_name': 'Oliveira',
+        'email': 'joao.passageiro@gmail.com',
+        'tipo': 'passageiro',
+        'telefone': '(74) 99200-2233',
+        'cpf': '555.666.777-05',
+    },
+    {
+        'username': 'cliente.ana',
+        'first_name': 'Ana',
+        'last_name': 'Ferreira',
+        'email': 'ana.passageira@gmail.com',
+        'tipo': 'passageiro',
+        'telefone': '(87) 99300-3344',
+        'cpf': '666.777.888-06',
+    },
+    # Gestor de Cooperativa de teste
+    {
+        'username': 'gestor.coop',
+        'first_name': 'Marcos',
+        'last_name': 'Gestor',
+        'email': 'gestao@cootransvale.com',
+        'tipo': 'gestor',
+        'telefone': '(87) 98123-4567',
+        'cpf': '777.888.999-07',
+    },
+]
+
+
 def criar_usuarios(quantidade=200):
-    """Cria usuários com perfis (passageiros, motoristas, gestores)."""
-    print(f'Criando {quantidade} usuários...')
+    """Cria usuários de teste fixos e completa com perfis gerados por Faker."""
+    print(f'Criando usuários de teste fixos e até {quantidade} aleatórios...')
     usuarios = []
+
+    # 1. Cria primeiro os usuários fixos com logins conhecidos
+    for item in USUARIOS_TESTE_FIXOS:
+        try:
+            user = User.objects.create_user(
+                username=item['username'],
+                email=item['email'],
+                password='senha123',
+                first_name=item['first_name'],
+                last_name=item['last_name'],
+            )
+            Perfil.objects.create(
+                usuario=user,
+                tipo=item['tipo'],
+                telefone=item['telefone'],
+                cpf=item['cpf'],
+                data_nascimento=fake.date_of_birth(minimum_age=20, maximum_age=60),
+            )
+            usuarios.append(user)
+        except Exception as e:
+            pass
+
+    # 2. Gera os demais usuários aleatórios
     for i in range(quantidade):
         first_name = fake.first_name()
         last_name = fake.last_name()
@@ -89,33 +183,87 @@ def criar_usuarios(quantidade=200):
             usuarios.append(user)
         except Exception as e:
             pass  
-    print(f'  {len(usuarios)} usuários criados.')
+    print(f'  {len(usuarios)} usuários criados (incluindo contas de teste fixas).')
     return usuarios
 
 
-def criar_operadores(quantidade=15):
-    """Cria operadores (cooperativas/empresas)."""
-    print(f'Criando {quantidade} operadores...')
-    operadores = []
-    nomes_prefixos = [
-        'Cooperativa', 'TransCoop', 'VanTur', 'RápidoTrans',
-        'ExpressoVan', 'LotaFácil', 'TransAlternativo', 'VanExpress',
-        'CoopTrans', 'MicroTrans', 'AlternaVan', 'VanRota',
-        'TransCidade', 'CoopVan', 'VanPopular'
-    ]
-    for i in range(quantidade):
-        nome = f'{nomes_prefixos[i % len(nomes_prefixos)]} {fake.city_suffix()} {fake.city()}'
+COOPERATIVAS_CONFIG = [
+    # --- Pernambuco (Petrolina e Região) ---
+    {
+        'sigla': 'COOTRANSVALE',
+        'nome': 'COOTRANSVALE - Coop. de Transporte do Vale do São Francisco',
+        'endereco': 'Terminal Rodoviário de Petrolina - Geva, Petrolina - PE',
+    },
+    {
+        'sigla': 'COOTRAP',
+        'nome': 'COOTRAP - Coop. de Transporte de Passageiros de Petrolina',
+        'endereco': 'Ponto das Vans do Interior, Centro, Petrolina - PE',
+    },
+    {
+        'sigla': 'COOTRANSPE',
+        'nome': 'COOTRANSPE - Coop. dos Transportadores de Pernambuco',
+        'endereco': 'Av. Sete de Setembro, s/n, Petrolina - PE',
+    },
+    {
+        'sigla': 'COOTRANSERTÃO',
+        'nome': 'COOTRANSERTÃO - Coop. dos Transportadores Sertanejos',
+        'endereco': 'Praça da Catedral, Centro, Petrolina - PE',
+    },
+    # --- Bahia (Juazeiro e Região) ---
+    {
+        'sigla': 'COOTRANSJUA',
+        'nome': 'COOTRANSJUA - Coop. de Transporte Alternativo de Juazeiro',
+        'endereco': 'Mercado do Produtor de Juazeiro, Rod. Lomanto Júnior, Juazeiro - BA',
+    },
+    {
+        'sigla': 'ASTAFRAN',
+        'nome': 'ASTAFRAN - Assoc. dos Transportadores de Casa Nova',
+        'endereco': 'Terminal de Vans Juazeiro / Posto Fiscal BR-235, Juazeiro - BA',
+    },
+    {
+        'sigla': 'ASTRASOB',
+        'nome': 'ASTRASOB - Assoc. dos Transportadores de Sobradinho',
+        'endereco': 'Terminal Rodoviário de Juazeiro - BA-210, Juazeiro - BA',
+    },
+    {
+        'sigla': 'ASTRASS',
+        'nome': 'ASTRASS - Assoc. dos Transportadores de Sento Sé',
+        'endereco': 'Ponto das Vans de Sento Sé, BA-210, Juazeiro - BA',
+    },
+    {
+        'sigla': 'ASTAR',
+        'nome': 'ASTAR - Assoc. dos Transportadores de Remanso e Região',
+        'endereco': 'Terminal Urbano de Juazeiro, Juazeiro - BA',
+    },
+    {
+        'sigla': 'ASTRA-Curaçá',
+        'nome': 'Assoc. dos Transportadores de Curaçá',
+        'endereco': 'Terminal de Passageiros, BA-210, Juazeiro - BA',
+    },
+    {
+        'sigla': 'ASTRA-Bonfim/Uauá',
+        'nome': 'Assoc. dos Transportadores de Senhor do Bonfim e Uauá',
+        'endereco': 'Saída BR-407, Juazeiro - BA',
+    },
+]
+
+
+def criar_operadores():
+    """Cria cooperativas e associações oficiais de Pernambuco e Bahia."""
+    print('Criando cooperativas oficiais do Vale do São Francisco...')
+    operadores_map = {}
+    for item in COOPERATIVAS_CONFIG:
         operador = Operador.objects.create(
-            nome=nome[:200],
+            nome=item['nome'],
             cnpj=fake.cnpj(),
             telefone=fake.phone_number(),
-            email=fake.company_email(),
-            endereco=fake.address(),
-            ativo=random.choice([True, True, True, False]),  # 75% ativos
+            email=f"{item['sigla'].lower().replace('-', '_')}@transporte.org.br",
+            endereco=item['endereco'],
+            ativo=True,
         )
-        operadores.append(operador)
-    print(f'  {len(operadores)} operadores criados.')
-    return operadores
+        operadores_map[item['sigla']] = operador
+    print(f'  {len(operadores_map)} cooperativas/associações oficiais criadas.')
+    return operadores_map
 
 
 def criar_veiculos(operadores, quantidade=80):
@@ -170,104 +318,336 @@ def criar_motoristas(operadores, usuarios):
     perfis_motorista = Perfil.objects.filter(tipo='motorista')
     motoristas = []
     cnhs_usadas = set()
+
+    cnhs_fixas = {
+        'motorista.carlos': '12345678901',
+        'motorista.antonio': '23456789012',
+        'motorista.jose': '34567890123',
+    }
+
     for perfil in perfis_motorista:
-        while True:
-            cnh = fake.numerify('###########')
-            if cnh not in cnhs_usadas:
-                cnhs_usadas.add(cnh)
-                break
+        uname = perfil.usuario.username
+        if uname in cnhs_fixas:
+            cnh = cnhs_fixas[uname]
+            cnhs_usadas.add(cnh)
+            ativo = True
+        else:
+            while True:
+                cnh = fake.numerify('###########')
+                if cnh not in cnhs_usadas:
+                    cnhs_usadas.add(cnh)
+                    break
+            ativo = random.choice([True, True, True, False])
+
         motorista = Motorista.objects.create(
             perfil=perfil,
             operador=random.choice(operadores),
             cnh=cnh,
             categoria_cnh=random.choice(['D', 'D', 'E']),
-            ativo=random.choice([True, True, True, False]),
+            ativo=ativo,
         )
         motoristas.append(motorista)
     print(f'  {len(motoristas)} motoristas criados.')
     return motoristas
 
 
-def criar_paradas(quantidade=120):
-    """Cria paradas (pontos de embarque/desembarque)."""
-    print(f'Criando {quantidade} paradas...')
-    tipos_local = [
-        'Terminal', 'Ponto', 'Praça', 'Rodoviária', 'Estação',
-        'Parada', 'Cruzamento', 'Rotatória', 'Shopping', 'Hospital',
-        'Mercado', 'Igreja', 'Escola', 'Posto', 'Parque'
-    ]
-    paradas = []
-    for _ in range(quantidade):
-        tipo_local = random.choice(tipos_local)
-        nome = f'{tipo_local} {fake.street_name()}'
+# ── Rotas Oficiais do Vale do São Francisco ──────────────────
+DADOS_ROTAS_REGIONAIS = [
+    {
+        'cooperativa': 'COOTRANSVALE',
+        'cidade_a': 'Petrolina',
+        'cidade_b': 'Lagoa Grande (PE)',
+        'eixo': 'BR-428',
+        'distancia': '~54 km',
+        'preco': Decimal('20.00'),
+        'paradas': [
+            'Terminal Rodoviário de Petrolina',
+            'Posto Trevo Petrolina (BR-428)',
+            'Ponto Central de Izacolândia',
+            'Rodoviária de Lagoa Grande'
+        ]
+    },
+    {
+        'cooperativa': 'COOTRANSVALE',
+        'cidade_a': 'Petrolina',
+        'cidade_b': 'Santa Maria da Boa Vista (PE)',
+        'eixo': 'BR-428',
+        'distancia': '~109 km',
+        'preco': Decimal('45.00'),
+        'paradas': [
+            'Terminal Rodoviário de Petrolina',
+            'Posto Trevo Petrolina',
+            'Entrada de Lagoa Grande (BR-428)',
+            'Trevo de Orocó',
+            'Terminal de Santa Maria da Boa Vista'
+        ]
+    },
+    {
+        'cooperativa': 'COOTRANSVALE',
+        'cidade_a': 'Petrolina',
+        'cidade_b': 'Afrânio / Dormentes (PE)',
+        'eixo': 'BR-407 / PE-630',
+        'distancia': '~120 km',
+        'preco': Decimal('35.00'),
+        'paradas': [
+            'Terminal Rodoviário de Petrolina',
+            'Avenida Sete de Setembro',
+            'Posto Fiscal de Rajada',
+            'Entrada de Dormentes',
+            'Terminal Central de Afrânio'
+        ]
+    },
+    {
+        'cooperativa': 'ASTRASOB',
+        'cidade_a': 'Juazeiro',
+        'cidade_b': 'Sobradinho (BA)',
+        'eixo': 'BA-210',
+        'distancia': '~48 km',
+        'preco': Decimal('20.00'),
+        'paradas': [
+            'Terminal Rodoviário de Juazeiro',
+            'Mercado do Produtor de Juazeiro',
+            'Ponto da Serra da Batateira',
+            'Terminal Urbano de Sobradinho'
+        ]
+    },
+    {
+        'cooperativa': 'ASTAFRAN',
+        'cidade_a': 'Juazeiro',
+        'cidade_b': 'Casa Nova (BA)',
+        'eixo': 'BR-235',
+        'distancia': '~69 km',
+        'preco': Decimal('30.00'),
+        'paradas': [
+            'Terminal de Vans de Juazeiro',
+            'Posto Fiscal Juazeiro (BR-235)',
+            'Entrada de Santana do Sobrado',
+            'Praça Central de Casa Nova'
+        ]
+    },
+    {
+        'cooperativa': 'ASTRA-Curaçá',
+        'cidade_a': 'Juazeiro',
+        'cidade_b': 'Curaçá (BA)',
+        'eixo': 'BA-210',
+        'distancia': '~97 km',
+        'preco': Decimal('35.00'),
+        'paradas': [
+            'Terminal Rodoviário de Juazeiro',
+            'Posto Pedra Branca (BA-210)',
+            'Ponto do Barro Vermelho',
+            'Rodoviária de Curaçá'
+        ]
+    },
+    {
+        'cooperativa': 'ASTRA-Bonfim/Uauá',
+        'cidade_a': 'Juazeiro',
+        'cidade_b': 'Uauá / Senhor do Bonfim (BA)',
+        'eixo': 'BR-407 / BA-314',
+        'distancia': '~110 a 130 km',
+        'preco': Decimal('35.00'),
+        'paradas': [
+            'Terminal Rodoviário de Juazeiro',
+            'Trevo de Carnaíba do Sertão',
+            'Posto Fiscal de Jaguarari',
+            'Terminal de Bonfim / Uauá'
+        ]
+    },
+    {
+        'cooperativa': 'ASTRASS',
+        'cidade_a': 'Juazeiro',
+        'cidade_b': 'Sento Sé (BA)',
+        'eixo': 'BA-210',
+        'distancia': '~195 km',
+        'preco': Decimal('65.00'),
+        'paradas': [
+            'Terminal de Vans de Juazeiro',
+            'Trevo de Sobradinho',
+            'Distrito de Piçarrão',
+            'Terminal Central de Sento Sé'
+        ]
+    },
+    {
+        'cooperativa': 'ASTAR',
+        'cidade_a': 'Juazeiro',
+        'cidade_b': 'Remanso / Pilão Arcado (BA)',
+        'eixo': 'BR-235 / BA-309',
+        'distancia': '~202 a 260 km',
+        'preco': Decimal('85.00'),
+        'paradas': [
+            'Terminal Rodoviário de Juazeiro',
+            'Santana do Sobrado',
+            'Entrada de Casa Nova',
+            'Rodoviária de Remanso',
+            'Terminal de Pilão Arcado'
+        ]
+    },
+    {
+        'cooperativa': 'COOTRAP',
+        'cidade_a': 'Petrolina',
+        'cidade_b': 'Projetos Nilo Coelho / Bebedouro (PE)',
+        'eixo': 'Vicinais / Projetos Irrigados',
+        'distancia': '~35 km',
+        'preco': Decimal('10.00'),
+        'paradas': [
+            'Terminal Rodoviário de Petrolina',
+            'Ponto do KM 25',
+            'Vila Nova N-4',
+            'Projeto Maria Tereza',
+            'Núcleo de Bebedouro'
+        ]
+    },
+    {
+        'cooperativa': 'COOTRANSPE',
+        'cidade_a': 'Petrolina',
+        'cidade_b': 'Orocó / Cabrobó / Salgueiro (PE)',
+        'eixo': 'BR-428 / BR-116',
+        'distancia': '~240 km',
+        'preco': Decimal('60.00'),
+        'paradas': [
+            'Terminal Rodoviário de Petrolina',
+            'Trevo de Santa Maria da Boa Vista',
+            'Terminal de Orocó',
+            'Rodoviária de Cabrobó',
+            'Terminal Rodoviário de Salgueiro'
+        ]
+    },
+    {
+        'cooperativa': 'COOTRANSERTÃO',
+        'cidade_a': 'Petrolina',
+        'cidade_b': 'Distritos de Izacolândia / Rajada (PE)',
+        'eixo': 'BR-428 / BR-407',
+        'distancia': '~65 km',
+        'preco': Decimal('15.00'),
+        'paradas': [
+            'Terminal Rodoviário de Petrolina',
+            'Ponto Central de Izacolândia',
+            'Posto Fiscal de Rajada',
+            'Distrito de Pau Ferro'
+        ]
+    },
+    {
+        'cooperativa': 'COOTRANSJUA',
+        'cidade_a': 'Juazeiro',
+        'cidade_b': 'Distritos Maniçoba / Salitre (BA)',
+        'eixo': 'Vicinais / Projetos Irrigados',
+        'distancia': '~45 km',
+        'preco': Decimal('10.00'),
+        'paradas': [
+            'Terminal de Vans de Juazeiro',
+            'Mercado do Produtor de Juazeiro',
+            'Ponto Central de Maniçoba',
+            'Distrito de Itamotinga',
+            'Região do Salitre'
+        ]
+    },
+]
+
+
+def criar_paradas():
+    """Cria paradas fixas dos municípios da região."""
+    print('Criando paradas reais da região de Petrolina e Juazeiro...')
+    paradas_criadas = {}
+    
+    # Coleta todas as paradas únicas da lista
+    nomes_paradas = set()
+    for item in DADOS_ROTAS_REGIONAIS:
+        for p in item['paradas']:
+            nomes_paradas.add(p)
+            
+    for nome in nomes_paradas:
         parada = Parada.objects.create(
-            nome=nome[:200],
-            endereco=fake.address(),
-            latitude=Decimal(str(round(random.uniform(-10.0, -8.0), 6))),
-            longitude=Decimal(str(round(random.uniform(-40.0, -38.0), 6))),
-            referencia=f'Próximo ao {fake.street_name()}' if random.random() > 0.3 else '',
-            ativa=random.choice([True, True, True, True, False]),
+            nome=nome,
+            endereco=f'{nome}, Região do São Francisco',
+            latitude=Decimal(str(round(random.uniform(-9.5, -9.2), 6))),
+            longitude=Decimal(str(round(random.uniform(-40.6, -40.3), 6))),
+            referencia='Ponto oficial de transporte alternativo',
+            ativa=True,
         )
-        paradas.append(parada)
-    print(f'  {len(paradas)} paradas criadas.')
-    return paradas
+        paradas_criadas[nome] = parada
+        
+    print(f'  {len(paradas_criadas)} paradas oficiais criadas.')
+    return paradas_criadas
 
 
-def criar_rotas(operadores, paradas, quantidade=40):
-    """Cria rotas com paradas ordenadas."""
-    print(f'Criando {quantidade} rotas...')
+def criar_rotas(operadores_map, paradas_dict):
+    """Cria rotas de ida e volta vinculadas às cooperativas correspondentes."""
+    print('Criando rotas e itinerários oficiais (ida e volta)...')
     rotas = []
-    for i in range(quantidade):
-        origem = fake.city()
-        destino = fake.city()
-        rota = Rota.objects.create(
-            nome=f'{origem} → {destino}',
-            descricao=f'Linha de transporte alternativo de {origem} a {destino}. {fake.sentence()}',
-            operador=random.choice(operadores),
-            ativa=random.choice([True, True, True, False]),
+    precos_rotas = {}
+
+    for item in DADOS_ROTAS_REGIONAIS:
+        sigla = item['cooperativa']
+        # Vincula à cooperativa oficial responsável
+        operador = operadores_map.get(sigla, list(operadores_map.values())[0])
+        
+        # 1. Rota de Ida: A -> B
+        rota_ida = Rota.objects.create(
+            nome=f"{item['cidade_a']} → {item['cidade_b']}",
+            descricao=f"Eixo: {item['eixo']} | Distância: {item['distancia']} | Tarifa: R$ {item['preco']}",
+            operador=operador,
+            ativa=True,
         )
-        # Add 3 to 8 ordered stops
-        num_paradas = random.randint(3, 8)
-        paradas_selecionadas = random.sample(paradas, min(num_paradas, len(paradas)))
-        for ordem, parada in enumerate(paradas_selecionadas, start=1):
+        for ordem, p_nome in enumerate(item['paradas'], start=1):
             ParadaRota.objects.create(
-                rota=rota,
-                parada=parada,
+                rota=rota_ida,
+                parada=paradas_dict[p_nome],
                 ordem=ordem,
-                tempo_estimado=timedelta(minutes=random.randint(5, 30)),
+                tempo_estimado=timedelta(minutes=random.randint(15, 45)),
             )
-        rotas.append(rota)
-    print(f'  {len(rotas)} rotas criadas.')
-    return rotas
+        rotas.append(rota_ida)
+        precos_rotas[rota_ida.id] = item['preco']
+
+        # 2. Rota de Volta: B -> A
+        rota_volta = Rota.objects.create(
+            nome=f"{item['cidade_b']} → {item['cidade_a']}",
+            descricao=f"Eixo: {item['eixo']} | Distância: {item['distancia']} | Tarifa: R$ {item['preco']}",
+            operador=operador,
+            ativa=True,
+        )
+        for ordem, p_nome in enumerate(reversed(item['paradas']), start=1):
+            ParadaRota.objects.create(
+                rota=rota_volta,
+                parada=paradas_dict[p_nome],
+                ordem=ordem,
+                tempo_estimado=timedelta(minutes=random.randint(15, 45)),
+            )
+        rotas.append(rota_volta)
+        precos_rotas[rota_volta.id] = item['preco']
+
+    print(f'  {len(rotas)} linhas ativas cadastradas.')
+    return rotas, precos_rotas
 
 
-def criar_viagens(rotas, veiculos, motoristas, quantidade=300):
-    """Cria viagens agendadas, em andamento, concluídas e canceladas."""
-    print(f'Criando {quantidade} viagens...')
+def criar_viagens(rotas, precos_rotas, veiculos, motoristas, quantidade=120):
+    """Cria viagens com os preços tabelados exatos de cada linha."""
+    print(f'Criando {quantidade} viagens agendadas e operacionais...')
     if not motoristas:
         print('  Nenhum motorista disponível. Pulando viagens.')
         return []
     viagens = []
     agora = timezone.now()
+    
     for _ in range(quantidade):
         rota = random.choice(rotas)
         veiculo = random.choice(veiculos)
         motorista = random.choice(motoristas)
-        dias_offset = random.randint(-30, 30)
-        hora = random.randint(5, 22)
+        preco_oficial = precos_rotas.get(rota.id, Decimal('25.00'))
+
+        # Distribui partidas entre os próximos 15 dias e os últimos 5 dias
+        dias_offset = random.randint(-5, 15)
+        hora = random.randint(6, 20)
         minuto = random.choice([0, 15, 30, 45])
         data_saida = agora + timedelta(days=dias_offset, hours=hora - agora.hour, minutes=minuto - agora.minute)
 
-        if dias_offset < -2:
-            status = random.choice(['concluida', 'concluida', 'concluida', 'cancelada'])
-        elif dias_offset < 0:
-            status = random.choice(['concluida', 'em_andamento'])
+        if dias_offset < 0:
+            status = random.choice(['concluida', 'concluida', 'cancelada'])
         else:
-            status = random.choice(['agendada', 'agendada', 'agendada', 'cancelada'])
+            status = random.choice(['agendada', 'agendada', 'agendada', 'em_andamento'])
 
         data_chegada = None
         if status == 'concluida':
-            data_chegada = data_saida + timedelta(minutes=random.randint(30, 180))
+            data_chegada = data_saida + timedelta(hours=random.randint(1, 3))
 
         viagem = Viagem.objects.create(
             rota=rota,
@@ -276,12 +656,13 @@ def criar_viagens(rotas, veiculos, motoristas, quantidade=300):
             data_hora_saida=data_saida,
             data_hora_chegada=data_chegada,
             status=status,
-            vagas_disponiveis=random.randint(0, veiculo.capacidade),
-            preco=Decimal(str(round(random.uniform(3.50, 25.00), 2))),
-            observacoes=fake.sentence() if random.random() > 0.6 else '',
+            vagas_disponiveis=random.randint(1, veiculo.capacidade),
+            preco=preco_oficial,
+            observacoes=f'Linha regular do eixo {rota.descricao.split("|")[0].strip()}.',
         )
         viagens.append(viagem)
-    print(f'  {len(viagens)} viagens criadas.')
+        
+    print(f'  {len(viagens)} viagens registradas com sucesso.')
     return viagens
 
 
@@ -403,15 +784,16 @@ def main():
     limpar_banco()
     criar_superusuario()
 
-    usuarios = criar_usuarios(200)
-    operadores = criar_operadores(15)
-    veiculos = criar_veiculos(operadores, 80)
-    motoristas = criar_motoristas(operadores, usuarios)
-    paradas = criar_paradas(120)
-    rotas = criar_rotas(operadores, paradas, 40)
-    viagens = criar_viagens(rotas, veiculos, motoristas, 300)
-    reservas = criar_reservas(viagens, usuarios, 250)
-    avaliacoes = criar_avaliacoes(viagens, usuarios, 180)
+    usuarios = criar_usuarios(150)
+    operadores_map = criar_operadores()
+    operadores_lista = list(operadores_map.values())
+    veiculos = criar_veiculos(operadores_lista, 40)
+    motoristas = criar_motoristas(operadores_lista, usuarios)
+    paradas = criar_paradas()
+    rotas, precos_rotas = criar_rotas(operadores_map, paradas)
+    viagens = criar_viagens(rotas, precos_rotas, veiculos, motoristas, 120)
+    reservas = criar_reservas(viagens, usuarios, 100)
+    avaliacoes = criar_avaliacoes(viagens, usuarios, 70)
 
     print()
     print('=' * 60)
